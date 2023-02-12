@@ -76,5 +76,5 @@ def predict_spam_ham(message):
     
 # Predict whether the following messages are ham or spam
 input_message = input("Enter the subject of the email you want to know if spam or not: ")
-print("Result:",predict_spam_ham(input_message),(acc * 100),"%")
+print("Result:",predict_spam_ham(input_message),f"{(acc * 100):.2f}%")
 
