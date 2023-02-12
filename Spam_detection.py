@@ -18,10 +18,10 @@ vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(text_messages)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.75, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.85, random_state=0)
 
 # Train the logistic regression model
-clf = LogisticRegression(max_iter=5000)
+clf = LogisticRegression(max_iter=6000)
 clf.fit(X_train, y_train)
 
 # Make predictions on the test set
@@ -35,7 +35,7 @@ acc = accuracy_score(y_test, y_pred)
 plt.imshow(cm, cmap='binary')
 for i in range(cm.shape[0]):
     for j in range(cm.shape[1]):
-        plt.text(j, i, cm[i, j], ha="center", va="center", color="blue")
+        plt.text(j, i, cm[i, j], ha="center", va="center", color="orange")
 plt.title("Confusion Matrix")
 plt.xticks([0, 1], ["Ham", "Spam"])
 plt.yticks([0, 1], ["Ham", "Spam"])
@@ -75,6 +75,9 @@ def predict_spam_ham(message):
         return "That is a Spam with a probability of"
     
 # Predict whether the following messages are ham or spam
-input_message = input("Enter the subject of the email you want to know if spam or not: ")
-print("Result:",predict_spam_ham(input_message),f"{(acc * 100):.2f}%")
+while True:
+    input_message = input("Enter the subject of the email you want to know if spam or not (Enter 'q' to quit): ")
+    print("Result:",predict_spam_ham(input_message),f"{(acc * 100):.2f}%")
+    if input_message == 'q':
+        break
 
