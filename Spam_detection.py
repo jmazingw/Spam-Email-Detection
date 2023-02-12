@@ -18,7 +18,7 @@ vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(text_messages)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.75, random_state=0)
 
 # Train the logistic regression model
 clf = LogisticRegression(max_iter=5000)
@@ -70,7 +70,7 @@ def predict_spam_ham(message):
     message_vector = vectorizer.transform(message)
     prediction = clf.predict(message_vector)
     if prediction [0] == 0:
-        return "That is a legit with a probability of"
+        return "That is a legit mail with a probability of"
     else:
         return "That is a Spam with a probability of"
     
