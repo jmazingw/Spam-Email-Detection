@@ -61,7 +61,7 @@ plt.legend(loc="lower right")
 plt.show()
 
 # Print the accuracy of the model
-print("Accuracy:", acc)
+print("Accuracy:", (acc * 100), "%")
 
 
 # Function to predict whether a new message is ham or spam
@@ -69,12 +69,12 @@ def predict_spam_ham(message):
     message = [message]
     message_vector = vectorizer.transform(message)
     prediction = clf.predict(message_vector)
-    if prediction == [0]:
+    if prediction [0] == 0:
         return "Ham"
     else:
         return "Spam"
     
 # Predict whether the following messages are ham or spam
-input_message = input("Enter the message you want to know if spam or not: ")
-print(predict_spam_ham(input_message))
+input_message = input("Enter the subject of the email you want to know if spam or not: ")
+print("Result:",predict_spam_ham(input_message))
 
