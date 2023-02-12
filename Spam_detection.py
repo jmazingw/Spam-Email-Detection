@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score, roc_curve, auc
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -33,6 +33,9 @@ acc = accuracy_score(y_test, y_pred)
 
 # Plot the confusion matrix using matplotlib
 plt.imshow(cm, cmap='binary')
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        plt.text(j, i, cm[i, j], ha="center", va="center", color="blue")
 plt.title("Confusion Matrix")
 plt.xticks([0, 1], ["Ham", "Spam"])
 plt.yticks([0, 1], ["Ham", "Spam"])
@@ -40,8 +43,26 @@ plt.xlabel("Predicted Class")
 plt.ylabel("True Class")
 plt.show()
 
+# Plot the ROC curve
+fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+lw = 2
+plt.plot(fpr, tpr, color='darkorange',
+         lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic example')
+plt.legend(loc="lower right")
+plt.show()
+
 # Print the accuracy of the model
 print("Accuracy:", acc)
+
 
 # Function to predict whether a new message is ham or spam
 def predict_spam_ham(message):
@@ -56,3 +77,4 @@ def predict_spam_ham(message):
 # Predict whether the following messages are ham or spam
 input_message = input("Enter the message you want to know if spam or not: ")
 print(predict_spam_ham(input_message))
+
