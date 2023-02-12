@@ -1,64 +1,58 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+from sklearn.feature_extraction.text import CountVectorizer
 
-# Load the dataset from excel file
-df = pd.read_excel("spam_ham.xlsx")
+# Load the dataset
+df = pd.read_csv("spam_ham_dataset.csv")
 
-# Split the dataset into features and target
-X = df.iloc[:, :-1]
-y = df.iloc[:, -1]
+# Extract the text messages and labels
+text_messages = df["text"]
+labels = df["label_num"]
 
-# Split the dataset into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+# Convert the text messages into numerical features
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(text_messages)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2, random_state=0)
 
 # Train the logistic regression model
-clf = LogisticRegression()
+clf = LogisticRegression(max_iter=5000)
 clf.fit(X_train, y_train)
 
-# Predict the target on test set
+# Make predictions on the test set
 y_pred = clf.predict(X_test)
 
-# Plot confusion matrix
+# Calculate the confusion matrix and accuracy
 cm = confusion_matrix(y_test, y_pred)
-plt.imshow(cm, cmap='Blues')
-plt.colorbar()
-plt.xlabel("Predicted label")
-plt.ylabel("True label")
+acc = accuracy_score(y_test, y_pred)
+
+# Plot the confusion matrix using matplotlib
+plt.imshow(cm, cmap='binary')
 plt.title("Confusion Matrix")
+plt.xticks([0, 1], ["Ham", "Spam"])
+plt.yticks([0, 1], ["Ham", "Spam"])
+plt.xlabel("Predicted Class")
+plt.ylabel("True Class")
 plt.show()
 
-# Plot the ROC curve
-from sklearn.metrics import roc_auc_score, roc_curve
+# Print the accuracy of the model
+print("Accuracy:", acc)
 
-y_pred_prob = clf.predict_proba(X_test)[:, 1]
-fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
-roc_auc = roc_auc_score(y_test, y_pred_prob)
-
-plt.figure()
-plt.plot(fpr, tpr, label='ROC curve (area = %0.2f)' % roc_auc)
-plt.plot([0, 1], [0, 1], 'k--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('ROC Curve')
-plt.legend(loc="lower right")
-plt.show()
-
-# Input a sentence or paragraph
-new_data = input("Enter a sentence or paragraph: ")
-
-# Convert the input data into the required format
-new_data = np.array(new_data).reshape(1, -1)
-
-# Predict whether the input is a spam message or not
-prediction = clf.predict(new_data)
-
-if prediction == "spam":
-    print("The message is a spam message.")
-else:
-    print("The message is not a spam message.")
+# Function to predict whether a new message is ham or spam
+def predict_spam_ham(message):
+    message = [message]
+    message_vector = vectorizer.transform(message)
+    prediction = clf.predict(message_vector)
+    if prediction == [0]:
+        return "Ham"
+    else:
+        return "Spam"
+    
+# Predict whether the following messages are ham or spam
+input_message = input("Enter the message you want to know if spam or not: ")
+print(predict_spam_ham(input_message))
