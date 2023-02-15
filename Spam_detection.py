@@ -70,7 +70,7 @@ def predict_spam_ham(message):
     message_vector = vectorizer.transform(message)
     prediction = clf.predict(message_vector)
     if prediction [0] == 0:
-        return "That is a legit mail with a probability of"
+        return "That is a legitimate mail with a probability of"
     else:
         return "That is a Spam with a probability of"
     
