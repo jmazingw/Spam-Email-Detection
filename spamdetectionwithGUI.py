@@ -21,7 +21,7 @@ vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(text_messages)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.15, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.85, random_state=0)
 
 # Train the logistic regression model
 clf = LogisticRegression(max_iter=6000)
