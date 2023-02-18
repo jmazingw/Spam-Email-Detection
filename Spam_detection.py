@@ -7,21 +7,21 @@ import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Load the dataset
-df = pd.read_csv("spam_ham_dataset.csv")
+df = pd.read_csv("spam_assassin.csv")
 
 # Extract the text messages and labels
 text_messages = df["text"]
-labels = df["label_num"]
+labels = df["target"]
 
 # Convert the text messages into numerical features
 vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(text_messages)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.85, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.20, random_state=15)
 
 # Train the logistic regression model
-clf = LogisticRegression(max_iter=6000)
+clf = LogisticRegression(max_iter=160000)
 clf.fit(X_train, y_train)
 
 # Make predictions on the test set
